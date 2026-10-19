@@ -1,0 +1,266 @@
+--- a/java_absence/src/shop/ProductService.java
++++ b/java_absence/src/shop/ProductService.java
+@@ -6,10 +6,6 @@
+     private final Store store;
+     public ProductService(Store store) { this.store = store; }
+     public Optional<String> find(String sku) {
+-        try {
+-            return Optional.ofNullable(store.read(sku));
+-        } catch (RuntimeException failure) {
+-            return Optional.empty();
+-        }
++        return Optional.ofNullable(store.read(sku));
+     }
+ }
+--- /dev/null
++++ b/java_absence/test/ProductServiceTest.java
+@@ -0,0 +1,28 @@
++import shop.ProductService;
++
++public class ProductServiceTest {
++    public static void main(String[] args) {
++        final String sku = "sku-123";
++        final int[] calls = {0};
++        ProductService found = new ProductService(key -> {
++            if (!sku.equals(key)) throw new AssertionError("Changed lookup key");
++            calls[0]++;
++            return "product";
++        });
++        if (!"product".equals(found.find(sku).get()) || calls[0] != 1) {
++            throw new AssertionError("Changed successful lookup");
++        }
++        if (new ProductService(key -> null).find(sku).isPresent()) {
++            throw new AssertionError("Missing product was not empty");
++        }
++        RuntimeException outage = new IllegalStateException("store unavailable");
++        ProductService failed = new ProductService(key -> { throw outage; });
++        try {
++            failed.find(sku);
++            throw new AssertionError("Failure hidden as missing product");
++        } catch (RuntimeException actual) {
++            if (actual != outage) throw new AssertionError("Original failure lost");
++        }
++        System.out.println("ProductServiceTest passed");
++    }
++}
+--- a/java_amount_scale/src/shop/InvoiceAmounts.java
++++ b/java_amount_scale/src/shop/InvoiceAmounts.java
+@@ -5,7 +5,7 @@
+     private InvoiceAmounts() {}
+     /** Missing amounts cannot be reconciled, including two missing amounts. */
+     public static boolean matches(BigDecimal expected, BigDecimal actual) {
+-        return expected != null && actual != null && expected.equals(actual);
++        return expected != null && actual != null && expected.compareTo(actual) == 0;
+     }
+     public static String display(BigDecimal amount) {
+         return amount == null ? "--" : amount.toPlainString();
+--- /dev/null
++++ b/java_amount_scale/test/InvoiceAmountsTest.java
+@@ -0,0 +1,23 @@
++import java.math.BigDecimal;
++import shop.InvoiceAmounts;
++
++public class InvoiceAmountsTest {
++    private static void check(boolean condition) {
++        if (!condition) throw new AssertionError();
++    }
++    public static void main(String[] args) {
++        BigDecimal amount = new BigDecimal("10.00");
++        check(InvoiceAmounts.matches(new BigDecimal("10.0"), amount));
++        check(InvoiceAmounts.matches(new BigDecimal("1E+1"), amount));
++        check(InvoiceAmounts.matches(new BigDecimal("-10.0"), new BigDecimal("-10.00")));
++        check(InvoiceAmounts.matches(BigDecimal.ZERO, new BigDecimal("0.000")));
++        check(!InvoiceAmounts.matches(new BigDecimal("10.000000000000000001"), amount));
++        check(!InvoiceAmounts.matches(null, amount));
++        check(!InvoiceAmounts.matches(amount, null));
++        check(!InvoiceAmounts.matches(null, null));
++        check("10.00".equals(InvoiceAmounts.display(amount)));
++        check("--".equals(InvoiceAmounts.display(null)));
++        check(amount.scale() == 2);
++        System.out.println("InvoiceAmountsTest passed");
++    }
++}
+--- a/java_nullable_note/src/shop/OrderMapper.java
++++ b/java_nullable_note/src/shop/OrderMapper.java
+@@ -8,7 +8,7 @@
+     }
+     private OrderMapper() {}
+     public static String toJson(Order order) {
+-        String note = order.note.trim();
++        String note = order.note == null ? null : order.note.trim();
+         return "{\"id\":" + quote(order.id) + ",\"note\":" + quote(note) + "}";
+     }
+     // The detail schema includes both fields; absent values are JSON null.
+--- /dev/null
++++ b/java_nullable_note/test/OrderMapperTest.java
+@@ -0,0 +1,17 @@
++import shop.OrderMapper;
++
++public class OrderMapperTest {
++    private static void check(String expected, OrderMapper.Order order) {
++        String actual = OrderMapper.toJson(order);
++        if (!expected.equals(actual)) throw new AssertionError(actual);
++    }
++    public static void main(String[] args) {
++        check("{\"id\":\"legacy\",\"note\":null}", new OrderMapper.Order("legacy", null));
++        check("{\"id\":null,\"note\":null}", new OrderMapper.Order(null, null));
++        check("{\"id\":\"new\",\"note\":\"hello\"}", new OrderMapper.Order("new", " hello "));
++        check("{\"id\":\"blank\",\"note\":\"\"}", new OrderMapper.Order("blank", " \t\n "));
++        check("{\"id\":\"a\\\"b\",\"note\":\"x\\n\\t\\r\\\"\\\\\\u0001z\"}",
++                new OrderMapper.Order("a\"b", " x\n\t\r\"\\\u0001z "));
++        System.out.println("OrderMapperTest passed");
++    }
++}
+--- a/java_shipping_threshold/src/shop/ShippingFee.java
++++ b/java_shipping_threshold/src/shop/ShippingFee.java
+@@ -5,6 +5,7 @@
+     private ShippingFee() {}
+     public static BigDecimal fee(int units) {
+         if (units < 0) throw new IllegalArgumentException("units must be nonnegative");
++        if (units >= 12) return new BigDecimal("0.00");
+         return new BigDecimal("5.00");
+     }
+ }
+--- /dev/null
++++ b/java_shipping_threshold/test/ShippingFeeTest.java
+@@ -0,0 +1,27 @@
++import java.math.BigDecimal;
++import shop.ShippingFee;
++
++public class ShippingFeeTest {
++    private static void checkFee(int units, String expected) {
++        if (!new BigDecimal(expected).equals(ShippingFee.fee(units))) {
++            throw new AssertionError("Unexpected fee for " + units);
++        }
++    }
++    public static void main(String[] args) {
++        checkFee(0, "5.00");
++        checkFee(1, "5.00");
++        checkFee(11, "5.00");
++        checkFee(12, "0.00");
++        checkFee(13, "0.00");
++        checkFee(Integer.MAX_VALUE, "0.00");
++        try {
++            ShippingFee.fee(-1);
++            throw new AssertionError("Negative quantity accepted");
++        } catch (IllegalArgumentException expected) {
++            if (!"units must be nonnegative".equals(expected.getMessage())) {
++                throw new AssertionError("Changed validation message");
++            }
++        }
++        System.out.println("ShippingFeeTest passed");
++    }
++}
+--- a/python_delivery_uncertain/delivery.py
++++ b/python_delivery_uncertain/delivery.py
+@@ -7,10 +7,12 @@
+     """The outcome needs reconciliation by the caller."""
+ 
+ def deliver(client, key, payload):
+-    """Return the receiver result. Temporary rejections get at most 3 attempts."""
++    """Return the result; retry temporary rejections, surface timeouts as uncertain."""
+     for attempt in range(3):
+         try:
+             return client.send(key, payload)
+-        except (TemporaryRejection, TimeoutError):
++        except TimeoutError as failure:
++            raise DeliveryUncertain("Delivery timed out; reconcile the remote result") from failure
++        except TemporaryRejection:
+             if attempt == 2:
+                 raise
+--- /dev/null
++++ b/python_delivery_uncertain/test_delivery.py
+@@ -0,0 +1,52 @@
++import unittest
++from unittest.mock import Mock, call
++
++from delivery import DeliveryUncertain, TemporaryRejection, deliver
++
++
++class DeliveryTests(unittest.TestCase):
++    def test_success_returns_result_and_preserves_arguments(self):
++        client = Mock()
++        result, payload = object(), {"order": "123"}
++        client.send.return_value = result
++        self.assertIs(deliver(client, "key", payload), result)
++        client.send.assert_called_once_with("key", payload)
++
++    def test_temporary_rejections_still_retry(self):
++        client = Mock()
++        client.send.side_effect = [TemporaryRejection(), TemporaryRejection(), "accepted"]
++        self.assertEqual(deliver(client, "key", "payload"), "accepted")
++        self.assertEqual(client.send.call_args_list, [call("key", "payload")] * 3)
++
++    def test_third_rejection_propagates(self):
++        client = Mock()
++        last = TemporaryRejection("still rejected")
++        client.send.side_effect = [TemporaryRejection(), TemporaryRejection(), last]
++        with self.assertRaises(TemporaryRejection) as caught:
++            deliver(client, "key", "payload")
++        self.assertIs(caught.exception, last)
++        self.assertEqual(client.send.call_count, 3)
++
++    def test_timeout_on_any_attempt_stops_sends_and_preserves_cause(self):
++        for attempt in range(1, 4):
++            with self.subTest(attempt=attempt):
++                client = Mock()
++                timeout = TimeoutError("response lost")
++                client.send.side_effect = [TemporaryRejection()] * (attempt - 1) + [timeout, "accepted"]
++                with self.assertRaises(DeliveryUncertain) as caught:
++                    deliver(client, "key", "payload")
++                self.assertIs(caught.exception.__cause__, timeout)
++                self.assertEqual(client.send.call_count, attempt)
++
++    def test_unrelated_failure_does_not_retry(self):
++        client = Mock()
++        failure = ValueError("bad payload")
++        client.send.side_effect = failure
++        with self.assertRaises(ValueError) as caught:
++            deliver(client, "key", "payload")
++        self.assertIs(caught.exception, failure)
++        self.assertEqual(client.send.call_count, 1)
++
++
++if __name__ == "__main__":
++    unittest.main()
+--- a/python_report_cancelled/report.py
++++ b/python_report_cancelled/report.py
+@@ -2,10 +2,10 @@
+ 
+ def summarize(rows):
+     """Consume order dictionaries, including streaming query results."""
+-    counts = {"total": 0, "paid": 0, "open": 0}
++    counts = {"total": 0, "paid": 0, "open": 0, "cancelled": 0}
+     for row in rows:
+         counts["total"] += 1
+         status = row.get("status")
+-        if status in ("paid", "open"):
++        if status in ("paid", "open", "cancelled"):
+             counts[status] += 1
+     return counts
+--- /dev/null
++++ b/python_report_cancelled/test_report.py
+@@ -0,0 +1,23 @@
++import unittest
++
++from report import summarize
++
++
++class ReportTests(unittest.TestCase):
++    def test_empty_input_contains_all_counters(self):
++        self.assertEqual(summarize(iter(())), {"total": 0, "paid": 0, "open": 0, "cancelled": 0})
++
++    def test_no_cancelled_orders_still_has_cancelled_field(self):
++        self.assertEqual(summarize([{"status": "paid"}, {"status": "open"}]),
++                         {"total": 2, "paid": 1, "open": 1, "cancelled": 0})
++
++    def test_stream_counts_cancelled_and_preserves_other_counters(self):
++        rows = ({"status": status} for status in ["cancelled", "paid", "cancelled", "open", "unknown", None])
++        self.assertEqual(summarize(rows), {"total": 6, "paid": 1, "open": 1, "cancelled": 2})
++
++    def test_missing_status_is_counted_only_in_total(self):
++        self.assertEqual(summarize([{}]), {"total": 1, "paid": 0, "open": 0, "cancelled": 0})
++
++
++if __name__ == "__main__":
++    unittest.main()

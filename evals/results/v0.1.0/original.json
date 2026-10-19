@@ -1,0 +1,192 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "case": "java_absence",
+      "passed": false,
+      "assertions": [
+        {
+          "id": "missing_is_empty",
+          "passed": true
+        },
+        {
+          "id": "found_value",
+          "passed": true
+        },
+        {
+          "id": "empty_value_is_present",
+          "passed": true
+        },
+        {
+          "id": "store_failure_propagates",
+          "passed": false
+        },
+        {
+          "id": "single_lookup_and_key",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "java_amount_scale",
+      "passed": false,
+      "assertions": [
+        {
+          "id": "equivalent_scales",
+          "passed": false
+        },
+        {
+          "id": "equivalent_negative_scales",
+          "passed": false
+        },
+        {
+          "id": "zero_scales",
+          "passed": false
+        },
+        {
+          "id": "negative_amounts",
+          "passed": false
+        },
+        {
+          "id": "different_amounts",
+          "passed": true
+        },
+        {
+          "id": "no_rounding",
+          "passed": true
+        },
+        {
+          "id": "full_precision",
+          "passed": true
+        },
+        {
+          "id": "missing_amounts",
+          "passed": true
+        },
+        {
+          "id": "display_preserves_scale",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "java_nullable_note",
+      "passed": false,
+      "assertions": [
+        {
+          "id": "missing_note",
+          "passed": false,
+          "detail": "java.lang.NullPointerException"
+        },
+        {
+          "id": "existing_trim",
+          "passed": true
+        },
+        {
+          "id": "empty_note",
+          "passed": true
+        },
+        {
+          "id": "escape_fields",
+          "passed": true
+        },
+        {
+          "id": "nullable_id",
+          "passed": true
+        },
+        {
+          "id": "unicode_note",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "java_shipping_threshold",
+      "passed": false,
+      "assertions": [
+        {
+          "id": "threshold_free",
+          "passed": false
+        },
+        {
+          "id": "above_threshold_free",
+          "passed": false
+        },
+        {
+          "id": "below_threshold",
+          "passed": true
+        },
+        {
+          "id": "zero_quantity",
+          "passed": true
+        },
+        {
+          "id": "negative_rejected",
+          "passed": true
+        },
+        {
+          "id": "legacy_label_compatibility",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "python_delivery_uncertain",
+      "passed": false,
+      "assertions": [
+        {
+          "id": "timeout_is_uncertain_without_resend",
+          "passed": false
+        },
+        {
+          "id": "timeout_after_rejection_stops",
+          "passed": false
+        },
+        {
+          "id": "temporary_rejections_retry_preserving_request",
+          "passed": true
+        },
+        {
+          "id": "retry_limit_and_exception",
+          "passed": true
+        },
+        {
+          "id": "other_failures_propagate",
+          "passed": true
+        },
+        {
+          "id": "success_result_unchanged",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "python_report_cancelled",
+      "passed": false,
+      "assertions": [
+        {
+          "id": "empty_has_cancelled_zero",
+          "passed": false
+        },
+        {
+          "id": "mixed_counts",
+          "passed": false
+        },
+        {
+          "id": "streaming_input",
+          "passed": false
+        },
+        {
+          "id": "unknown_and_missing_still_totalled",
+          "passed": false
+        },
+        {
+          "id": "input_unchanged",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "passed_cases": 0,
+  "total_cases": 6
+}

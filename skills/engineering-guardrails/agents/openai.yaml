@@ -1,0 +1,4 @@
+interface:
+  display_name: "Engineering Guardrails"
+  short_description: "Keep code changes clear, scoped, and compatible"
+  default_prompt: "Use $engineering-guardrails to implement this change within repository constraints and verify its behavior."

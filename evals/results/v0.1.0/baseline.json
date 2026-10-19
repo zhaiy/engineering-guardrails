@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "case": "java_absence",
+      "passed": true,
+      "assertions": [
+        {
+          "id": "missing_is_empty",
+          "passed": true
+        },
+        {
+          "id": "found_value",
+          "passed": true
+        },
+        {
+          "id": "empty_value_is_present",
+          "passed": true
+        },
+        {
+          "id": "store_failure_propagates",
+          "passed": true
+        },
+        {
+          "id": "single_lookup_and_key",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "java_amount_scale",
+      "passed": true,
+      "assertions": [
+        {
+          "id": "equivalent_scales",
+          "passed": true
+        },
+        {
+          "id": "equivalent_negative_scales",
+          "passed": true
+        },
+        {
+          "id": "zero_scales",
+          "passed": true
+        },
+        {
+          "id": "negative_amounts",
+          "passed": true
+        },
+        {
+          "id": "different_amounts",
+          "passed": true
+        },
+        {
+          "id": "no_rounding",
+          "passed": true
+        },
+        {
+          "id": "full_precision",
+          "passed": true
+        },
+        {
+          "id": "missing_amounts",
+          "passed": true
+        },
+        {
+          "id": "display_preserves_scale",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "java_nullable_note",
+      "passed": true,
+      "assertions": [
+        {
+          "id": "missing_note",
+          "passed": true
+        },
+        {
+          "id": "existing_trim",
+          "passed": true
+        },
+        {
+          "id": "empty_note",
+          "passed": true
+        },
+        {
+          "id": "escape_fields",
+          "passed": true
+        },
+        {
+          "id": "nullable_id",
+          "passed": true
+        },
+        {
+          "id": "unicode_note",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "java_shipping_threshold",
+      "passed": true,
+      "assertions": [
+        {
+          "id": "threshold_free",
+          "passed": true
+        },
+        {
+          "id": "above_threshold_free",
+          "passed": true
+        },
+        {
+          "id": "below_threshold",
+          "passed": true
+        },
+        {
+          "id": "zero_quantity",
+          "passed": true
+        },
+        {
+          "id": "negative_rejected",
+          "passed": true
+        },
+        {
+          "id": "legacy_label_compatibility",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "python_delivery_uncertain",
+      "passed": true,
+      "assertions": [
+        {
+          "id": "timeout_is_uncertain_without_resend",
+          "passed": true
+        },
+        {
+          "id": "timeout_after_rejection_stops",
+          "passed": true
+        },
+        {
+          "id": "temporary_rejections_retry_preserving_request",
+          "passed": true
+        },
+        {
+          "id": "retry_limit_and_exception",
+          "passed": true
+        },
+        {
+          "id": "other_failures_propagate",
+          "passed": true
+        },
+        {
+          "id": "success_result_unchanged",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "case": "python_report_cancelled",
+      "passed": true,
+      "assertions": [
+        {
+          "id": "empty_has_cancelled_zero",
+          "passed": true
+        },
+        {
+          "id": "mixed_counts",
+          "passed": true
+        },
+        {
+          "id": "streaming_input",
+          "passed": true
+        },
+        {
+          "id": "unknown_and_missing_still_totalled",
+          "passed": true
+        },
+        {
+          "id": "input_unchanged",
+          "passed": true
+        }
+      ]
+    }
+  ],
+  "passed_cases": 6,
+  "total_cases": 6
+}

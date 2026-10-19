@@ -1,0 +1,36 @@
+{
+  "skill_version": "0.1.0",
+  "date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "runtime": "Codex desktop subagents; fresh context per arm; one worker solves all six cases within each arm",
+  "model": "Parent model inherited without overrides; exact runtime model identifier and reasoning setting were not exposed by the delegation tool",
+  "environment": {
+    "os": "macOS",
+    "java": "javac 1.8.0_351",
+    "python": "3.10.10",
+    "installer": "skills 1.7.2",
+    "node": "22.22.3"
+  },
+  "trials_per_arm": 1,
+  "cases_per_trial": 6,
+  "invocation": "Explicit skill path; automatic discovery not evaluated",
+  "isolation": "Separate fixture copies; no production code, network, hidden harness, sibling outputs or reference solutions available to implementation workers",
+  "prompt_records": [
+    "baseline-prompt.txt",
+    "with-skill-prompt.txt"
+  ],
+  "normalization": "Task workspace and skill paths are replaced by tokens in published prompts. Build outputs and bytecode are excluded from code patches; source changes and added tests are retained.",
+  "design_note": "The no-skill implementation passed all checks before the candidate skill was authored. No failure was manufactured. This release implements the approved design; these trials do not establish incremental quality improvement.",
+  "measurement_limits": [
+    "Exact token use and comparable wall time were not available, so neither is reported.",
+    "Shared host, tool and base system instructions were not independently controlled.",
+    "Six cases within one arm are not six independent trials.",
+    "No automatic activation, production, framework integration, database or concurrency behavior was tested."
+  ],
+  "skill_sha256": {
+    "LICENSE": "720400a5378390d359dc4f47126fb63151b4eda75d8f049704de3b6325853de7",
+    "SKILL.md": "4a881856e0b7f8b8f237b96d2f799056709b1e7d8cea947fbb19808a71680f1e",
+    "agents/openai.yaml": "b02a06ff3f8c7323a221ced389e2aa0bdd6ea9f7d14d6ae4d3e456e98a7818a2",
+    "references/java.md": "0626f8fc192c1edf8fa6aa8c0b4c05f9025948e882f1aabd88f36c02b995be93"
+  }
+}
