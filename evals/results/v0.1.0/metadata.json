@@ -14,7 +14,7 @@
   "trials_per_arm": 1,
   "cases_per_trial": 6,
   "invocation": "Explicit skill path; automatic discovery not evaluated",
-  "isolation": "Separate fixture copies; no production code, network, hidden harness, sibling outputs or reference solutions available to implementation workers",
+  "isolation": "Separate fixture copies on a shared host. Workers were instructed not to access production code, network, hidden harness, sibling outputs or reference solutions; filesystem/network access was not technically sandboxed.",
   "prompt_records": [
     "baseline-prompt.txt",
     "with-skill-prompt.txt"

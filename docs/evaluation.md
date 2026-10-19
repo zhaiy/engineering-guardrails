@@ -6,7 +6,7 @@ Both arms passed all six tasks and all 37 behavioral assertions. No incremental 
 
 ## Scope and method
 
-On 2026-10-19 (Asia/Shanghai), separate fresh-context Codex subagents solved identical copies of six synthetic maintenance tasks. Each arm used one worker for all six tasks; cases within an arm are not independent trials. One arm used the existing runtime instructions; the other additionally loaded the candidate skill and its Java reference explicitly. The implementation workers could inspect their task sources and repository guides, but not the acceptance harness, reference answers, or the other arm. No proprietary project code was used.
+On 2026-10-19 (Asia/Shanghai), separate fresh-context Codex subagents solved identical copies of six synthetic maintenance tasks. Each arm used one worker for all six tasks; cases within an arm are not independent trials. One arm used the existing runtime instructions; the other additionally loaded the candidate skill and its Java reference explicitly. The implementation workers were instructed to inspect only their task sources and repository guides (plus the supplied skill in the treatment arm), and not the acceptance harness, reference answers, or the other arm. These were separate directories on a shared host, not a filesystem/network security sandbox. No proprietary project code was used.
 
 The base model was inherited without an override. The delegation tool did not expose its exact runtime model identifier or reasoning setting, so they are not guessed here. The trials shared the host and base tool/instruction environment. Exact token usage and comparable elapsed time were not measured. Prompt wording also differs in administrative isolation/authorization instructions, recorded below; this is not a perfectly controlled causal experiment.
 
@@ -52,6 +52,10 @@ The first script checks structure, metadata, packaged license and local document
 **Replay does not invoke an agent or prove the current skill causes these outcomes.** To evaluate a skill change, use new isolated fixture copies and fresh agent runs, then inspect both behavior and diffs. Include previously unseen, representative tasks and repeat trials before drawing general conclusions. Preserve failed results as well as successful ones. Changing model or tool settings is another variable to record.
 
 The harness executes supplied code locally; use only trusted evaluation workspaces. It creates temporary compile/probe directories and does not connect to live services.
+
+## Installation verification
+
+The `skills@1.7.2` command was run successfully against both the local package and the public `zhaiy/engineering-guardrails` repository, targeting Codex in separate disposable project directories on macOS with Node 22.22.3. All four installed files matched the source bytes, including the MIT license. This validates the documented installer path for that environment; other operating systems and agents were not exercised.
 
 ## Limits and next evidence
 

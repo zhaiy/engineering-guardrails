@@ -8,7 +8,7 @@ It asks the agent to understand repository instructions, runtime versions, calle
 
 ## Install
 
-Use the [Vercel Skills CLI](https://github.com/vercel-labs/skills/tree/v1.7.2). These commands pin the installer to `1.7.2`, which requires **Node.js 22.20.0 or later** ([package declaration](https://github.com/vercel-labs/skills/blob/v1.7.2/package.json)). Before installing, check for an existing skill with the same name and inspect any local changes:
+Use the [Vercel Skills CLI](https://github.com/vercel-labs/skills/tree/v1.7.2). These commands pin the installer to `1.7.2`, which requires Git and **Node.js 22.20.0 or later** ([package declaration](https://github.com/vercel-labs/skills/blob/v1.7.2/package.json)). Before installing, check for an existing skill with the same name and inspect any local changes:
 
 ```bash
 npx --yes skills@1.7.2 list --global --agent codex

@@ -8,7 +8,7 @@
 
 ## 安装
 
-使用 [Vercel Skills CLI](https://github.com/vercel-labs/skills/tree/v1.7.2)。下列命令固定安装器为 `1.7.2`，需要 **Node.js 22.20.0 或更新版本**（[版本声明](https://github.com/vercel-labs/skills/blob/v1.7.2/package.json)）。安装前先检查是否已有同名技能，以及是否含有本地修改：
+使用 [Vercel Skills CLI](https://github.com/vercel-labs/skills/tree/v1.7.2)。下列命令固定安装器为 `1.7.2`，需要 Git 和 **Node.js 22.20.0 或更新版本**（[版本声明](https://github.com/vercel-labs/skills/blob/v1.7.2/package.json)）。安装前先检查是否已有同名技能，以及是否含有本地修改：
 
 ```bash
 npx --yes skills@1.7.2 list --global --agent codex
